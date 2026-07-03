@@ -148,7 +148,12 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/applications', applicationRoutes);
 
-// ==================== HEALTH CHECK ====================
+// ==================== HEALTH CHECK & UPTIME MONITOR ====================
+
+// UptimeRobot uchun yengil ping endpoint (auth shart emas)
+app.get('/ping', (req, res) => {
+  res.status(200).send('OK');
+});
 
 app.get('/api/health', (req, res) => {
   res.json({
