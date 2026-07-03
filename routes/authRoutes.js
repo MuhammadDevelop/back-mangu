@@ -22,23 +22,21 @@ router.post('/login', async (req, res) => {
     const { login, password } = req.body;
 
     if (!login || !password) {
-      return res.status(400).json({ success: false, message: 'Login va parol kiritilishi shart.' });
+      return res.status(400).json({ success: false, message: res.t('invalidData') });
     }
 
     const users = readUsers();
-    // Match by login field or email field
     const user = users.find(u => u.login === login || u.email === login);
 
     if (!user || user.role !== 'admin') {
-      return res.status(401).json({ success: false, message: "Login yoki parol noto'g'ri." });
+      return res.status(401).json({ success: false, message: res.t('loginFailed') });
     }
 
     const isMatch = bcrypt.compareSync(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ success: false, message: "Login yoki parol noto'g'ri." });
+      return res.status(401).json({ success: false, message: res.t('loginFailed') });
     }
 
-    // Generate JWT Token
     const token = jwt.sign(
       { id: user.id, login: user.login || user.email, role: user.role },
       JWT_SECRET,
@@ -59,7 +57,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Login xatosi:', error);
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 

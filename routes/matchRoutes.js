@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
     res.json({ success: true, data: populatedMatches });
   } catch (error) {
     console.error('Matchlar olish xatosi:', error);
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -46,7 +46,7 @@ router.get('/:id', (req, res) => {
     const matches = readData();
     const match = matches.find(m => m.id === req.params.id);
     if (!match) {
-      return res.status(404).json({ success: false, message: "O'yin topilmadi." });
+      return res.status(404).json({ success: false, message: res.t('matchNotFound') });
     }
 
     const fightersPath = path.join(__dirname, '..', 'data', 'sportchilar.json');
@@ -60,7 +60,7 @@ router.get('/:id', (req, res) => {
     res.json({ success: true, data: match });
   } catch (error) {
     console.error('Match olish xatosi:', error);
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -102,10 +102,10 @@ router.post('/', auth, adminOnly, upload.single('image'), (req, res) => {
 
     matches.push(newMatch);
     writeData(matches);
-    res.status(201).json({ success: true, message: "O'yin yaratildi.", data: newMatch });
+    res.status(201).json({ success: true, message: res.t('matchCreated'), data: newMatch });
   } catch (error) {
     console.error('Match yaratish xatosi:', error);
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -116,7 +116,7 @@ router.put('/:id', auth, adminOnly, upload.single('image'), (req, res) => {
     const index = matches.findIndex(m => m.id === req.params.id);
 
     if (index === -1) {
-      return res.status(404).json({ success: false, message: "O'yin topilmadi." });
+      return res.status(404).json({ success: false, message: res.t('matchNotFound') });
     }
 
     const existing = matches[index];
@@ -147,7 +147,7 @@ router.put('/:id', auth, adminOnly, upload.single('image'), (req, res) => {
     res.json({ success: true, data: matches[index] });
   } catch (error) {
     console.error('Match yangilash xatosi:', error);
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -158,15 +158,15 @@ router.delete('/:id', auth, adminOnly, (req, res) => {
     const index = matches.findIndex(m => m.id === req.params.id);
 
     if (index === -1) {
-      return res.status(404).json({ success: false, message: "O'yin topilmadi." });
+      return res.status(404).json({ success: false, message: res.t('matchNotFound') });
     }
 
     const deleted = matches.splice(index, 1)[0];
     writeData(matches);
-    res.json({ success: true, data: deleted, message: "O'yin o'chirildi." });
+    res.json({ success: true, data: deleted, message: res.t('matchDeleted') });
   } catch (error) {
     console.error("Match o'chirish xatosi:", error);
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 

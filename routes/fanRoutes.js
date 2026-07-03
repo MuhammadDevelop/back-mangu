@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
     const fans = readData();
     res.json({ success: true, data: fans });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -51,7 +51,7 @@ router.post('/', (req, res) => {
     writeData(fans);
     res.status(201).json({ success: true, data: newFan, message: 'Xush kelibsiz! 100 coin bonus berildi.' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -62,7 +62,7 @@ router.put('/:id', auth, (req, res) => {
     const index = fans.findIndex(f => f.id === req.params.id);
 
     if (index === -1) {
-      return res.status(404).json({ success: false, message: 'Fan topilmadi.' });
+      return res.status(404).json({ success: false, message: res.t('fanNotFound') });
     }
 
     const existing = fans[index];
@@ -80,7 +80,7 @@ router.put('/:id', auth, (req, res) => {
     writeData(fans);
     res.json({ success: true, data: fans[index] });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -91,14 +91,14 @@ router.delete('/:id', auth, adminOnly, (req, res) => {
     const index = fans.findIndex(f => f.id === req.params.id);
 
     if (index === -1) {
-      return res.status(404).json({ success: false, message: 'Fan topilmadi.' });
+      return res.status(404).json({ success: false, message: res.t('fanNotFound') });
     }
 
     const deleted = fans.splice(index, 1)[0];
     writeData(fans);
-    res.json({ success: true, data: deleted, message: "Fan o'chirildi." });
+    res.json({ success: true, data: deleted, message: res.t('fanDeleted') });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -109,7 +109,7 @@ router.post('/:id/coins', auth, (req, res) => {
     const index = fans.findIndex(f => f.id === req.params.id);
 
     if (index === -1) {
-      return res.status(404).json({ success: false, message: 'Fan topilmadi.' });
+      return res.status(404).json({ success: false, message: res.t('fanNotFound') });
     }
 
     const { amount, reason } = req.body;
@@ -129,7 +129,7 @@ router.post('/:id/coins', auth, (req, res) => {
       message: `${coinsToAdd} coin qo'shildi. ${reason || ''}`
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 

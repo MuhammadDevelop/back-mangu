@@ -126,6 +126,10 @@ const createDefaultAdmin = () => {
 };
 createDefaultAdmin();
 
+// ==================== I18N (TIL) MIDDLEWARE ====================
+const { i18nMiddleware } = require('./middleware/i18n');
+app.use(i18nMiddleware);
+
 // ==================== ROUTES ====================
 
 const authRoutes = require('./routes/authRoutes');

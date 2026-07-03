@@ -35,7 +35,7 @@ const saveTickets = (tickets) => {
 router.post('/book', upload.single('receipt'), (req, res) => {
   const { matchId, zone, price, name, phone } = req.body;
   if (!matchId || !zone || !name || !phone) {
-    return res.status(400).json({ success: false, message: "Barcha maydonlarni to'ldiring" });
+    return res.status(400).json({ success: false, message: res.t('ticketRequired') });
   }
 
   const tickets = getTickets();
@@ -63,7 +63,7 @@ router.get('/', (req, res) => {
     tickets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json({ success: true, data: tickets });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Server xatosi' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -81,13 +81,13 @@ router.put('/:id/status', (req, res) => {
     const { status } = req.body;
     const index = tickets.findIndex(t => t._id === req.params.id);
 
-    if (index === -1) return res.status(404).json({ success: false, message: 'Chipta topilmadi' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('ticketNotFound') });
 
     tickets[index].status = status;
     saveTickets(tickets);
-    res.json({ success: true, message: "Holat o'zgartirildi" });
+    res.json({ success: true, message: res.t('ticketStatusChanged') });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Server xatosi' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -97,9 +97,9 @@ router.delete('/:id', (req, res) => {
     let tickets = getTickets();
     tickets = tickets.filter(t => t._id !== req.params.id);
     saveTickets(tickets);
-    res.json({ success: true, message: "Chipta o'chirildi" });
+    res.json({ success: true, message: res.t('ticketDeleted') });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Server xatosi' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 

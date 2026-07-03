@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
     let videos = readData();
     res.json({ success: true, data: videos });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -39,10 +39,10 @@ router.get('/:id', (req, res) => {
   try {
     const videos = readData();
     const video = videos.find(v => v.id === req.params.id);
-    if (!video) return res.status(404).json({ success: false, message: 'Video topilmadi.' });
+    if (!video) return res.status(404).json({ success: false, message: res.t('videoNotFound') });
     res.json({ success: true, data: video });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -67,7 +67,7 @@ router.post('/', auth, adminOnly, upload.fields([{ name: 'thumbnail', maxCount: 
     writeData(videos);
     res.status(201).json({ success: true, data: newVideo });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -75,7 +75,7 @@ router.put('/:id', auth, adminOnly, upload.fields([{ name: 'thumbnail', maxCount
   try {
     const videos = readData();
     const index = videos.findIndex(v => v.id === req.params.id);
-    if (index === -1) return res.status(404).json({ success: false, message: 'Video topilmadi.' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('videoNotFound') });
     const existing = videos[index];
     const { title, description, url, matchId, category, duration, views, published, removeThumbnail, removeVideo } = req.body;
     let newThumbnail = existing.thumbnail;
@@ -100,7 +100,7 @@ router.put('/:id', auth, adminOnly, upload.fields([{ name: 'thumbnail', maxCount
     writeData(videos);
     res.json({ success: true, data: videos[index] });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -108,12 +108,12 @@ router.delete('/:id', auth, adminOnly, (req, res) => {
   try {
     let videos = readData();
     const index = videos.findIndex(v => v.id === req.params.id);
-    if (index === -1) return res.status(404).json({ success: false, message: 'Video topilmadi.' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('videoNotFound') });
     const deleted = videos.splice(index, 1)[0];
     writeData(videos);
-    res.json({ success: true, data: deleted, message: "Video o'chirildi." });
+    res.json({ success: true, data: deleted, message: res.t('videoDeleted') });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 

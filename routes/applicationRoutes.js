@@ -38,7 +38,7 @@ router.get('/', (req, res) => {
     apps.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json({ success: true, data: apps });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -48,7 +48,7 @@ router.post('/', upload.single('videoUrl'), (req, res) => {
     const { name, phone, age, weight, height, experience } = req.body;
 
     if (!name || !phone) {
-      return res.status(400).json({ success: false, message: 'Ism va telefon raqam kiritish majburiy!' });
+      return res.status(400).json({ success: false, message: res.t('applicationRequired') });
     }
 
     const apps = getApplications();
@@ -67,10 +67,10 @@ router.post('/', upload.single('videoUrl'), (req, res) => {
 
     apps.push(newApp);
     saveApplications(apps);
-    res.json({ success: true, message: "Arizangiz muvaffaqiyatli yuborildi. Tez orada siz bilan bog'lanamiz!" });
+    res.json({ success: true, message: res.t('applicationSent') });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Server xatosi' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -81,13 +81,13 @@ router.put('/:id/status', (req, res) => {
     const { status } = req.body;
     const index = apps.findIndex(a => a._id === req.params.id);
 
-    if (index === -1) return res.status(404).json({ success: false, message: 'Ariza topilmadi' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('applicationNotFound') });
 
     apps[index].status = status;
     saveApplications(apps);
-    res.json({ success: true, message: "Holat o'zgartirildi" });
+    res.json({ success: true, message: res.t('ticketStatusChanged') });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -97,9 +97,9 @@ router.delete('/:id', (req, res) => {
     let apps = getApplications();
     apps = apps.filter(a => a._id !== req.params.id);
     saveApplications(apps);
-    res.json({ success: true, message: "Ariza o'chirildi" });
+    res.json({ success: true, message: res.t('applicationDeleted') });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 

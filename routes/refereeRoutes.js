@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
     const referees = readData();
     res.json({ success: true, data: referees });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -43,7 +43,7 @@ router.post('/', auth, adminOnly, (req, res) => {
     writeData(referees);
     res.status(201).json({ success: true, data: newReferee });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -51,7 +51,7 @@ router.put('/:id', auth, adminOnly, (req, res) => {
   try {
     const referees = readData();
     const index = referees.findIndex(r => r.id === req.params.id);
-    if (index === -1) return res.status(404).json({ success: false, message: 'Hakam topilmadi.' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('refereeNotFound') });
     const existing = referees[index];
     const { name, licenseNumber, licenseType, experience, rating, matchesOfficiated, warnings, disqualifications, isActive } = req.body;
     referees[index] = {
@@ -69,7 +69,7 @@ router.put('/:id', auth, adminOnly, (req, res) => {
     writeData(referees);
     res.json({ success: true, data: referees[index] });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -77,12 +77,12 @@ router.delete('/:id', auth, adminOnly, (req, res) => {
   try {
     let referees = readData();
     const index = referees.findIndex(r => r.id === req.params.id);
-    if (index === -1) return res.status(404).json({ success: false, message: 'Hakam topilmadi.' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('refereeNotFound') });
     const deleted = referees.splice(index, 1)[0];
     writeData(referees);
-    res.json({ success: true, data: deleted, message: "Hakam o'chirildi." });
+    res.json({ success: true, data: deleted, message: res.t('refereeDeleted') });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 

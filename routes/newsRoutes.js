@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
     const news = readData();
     res.json({ success: true, data: news });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -39,10 +39,10 @@ router.get('/:id', (req, res) => {
   try {
     const news = readData();
     const article = news.find(n => n.id === req.params.id);
-    if (!article) return res.status(404).json({ success: false, message: 'Yangilik topilmadi.' });
+    if (!article) return res.status(404).json({ success: false, message: res.t('newsNotFound') });
     res.json({ success: true, data: article });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -64,7 +64,7 @@ router.post('/', auth, adminOnly, upload.single('image'), (req, res) => {
     writeData(news);
     res.status(201).json({ success: true, data: newArticle });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -72,7 +72,7 @@ router.put('/:id', auth, adminOnly, upload.single('image'), (req, res) => {
   try {
     const news = readData();
     const index = news.findIndex(n => n.id === req.params.id);
-    if (index === -1) return res.status(404).json({ success: false, message: 'Yangilik topilmadi.' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('newsNotFound') });
     const existing = news[index];
     const { title, content, author, category, isPublished } = req.body;
     news[index] = {
@@ -87,7 +87,7 @@ router.put('/:id', auth, adminOnly, upload.single('image'), (req, res) => {
     writeData(news);
     res.json({ success: true, data: news[index] });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -95,12 +95,12 @@ router.delete('/:id', auth, adminOnly, (req, res) => {
   try {
     let news = readData();
     const index = news.findIndex(n => n.id === req.params.id);
-    if (index === -1) return res.status(404).json({ success: false, message: 'Yangilik topilmadi.' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('newsNotFound') });
     const deleted = news.splice(index, 1)[0];
     writeData(news);
-    res.json({ success: true, data: deleted, message: "Yangilik o'chirildi." });
+    res.json({ success: true, data: deleted, message: res.t('newsDeleted') });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 

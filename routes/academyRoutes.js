@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
     const courses = readData();
     res.json({ success: true, data: courses });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -55,7 +55,7 @@ router.post('/', auth, adminOnly, upload.single('image'), (req, res) => {
     writeData(courses);
     res.status(201).json({ success: true, data: newCourse });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -63,7 +63,7 @@ router.put('/:id', auth, adminOnly, upload.single('image'), (req, res) => {
   try {
     const courses = readData();
     const index = courses.findIndex(c => c.id === req.params.id);
-    if (index === -1) return res.status(404).json({ success: false, message: 'Kurs topilmadi.' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('courseNotFound') });
     const existing = courses[index];
     const { title, description, instructor, category, duration, level, isPublished } = req.body;
     courses[index] = {
@@ -80,7 +80,7 @@ router.put('/:id', auth, adminOnly, upload.single('image'), (req, res) => {
     writeData(courses);
     res.json({ success: true, data: courses[index] });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
@@ -88,12 +88,12 @@ router.delete('/:id', auth, adminOnly, (req, res) => {
   try {
     let courses = readData();
     const index = courses.findIndex(c => c.id === req.params.id);
-    if (index === -1) return res.status(404).json({ success: false, message: 'Kurs topilmadi.' });
+    if (index === -1) return res.status(404).json({ success: false, message: res.t('courseNotFound') });
     const deleted = courses.splice(index, 1)[0];
     writeData(courses);
-    res.json({ success: true, data: deleted, message: "Kurs o'chirildi." });
+    res.json({ success: true, data: deleted, message: res.t('courseDeleted') });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server xatosi.' });
+    res.status(500).json({ success: false, message: res.t('serverError') });
   }
 });
 
