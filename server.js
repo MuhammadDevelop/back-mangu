@@ -30,9 +30,22 @@ const authLimiter = rateLimit({
   message: { success: false, message: "Ko'p xato urinishlar. 1 soatdan keyin urinib ko'ring." }
 });
 
-// CORS - allow frontend origins
+// CORS - barcha frontenddan ruxsat (Render, Netlify, Vercel, localhost)
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://back-mangu.onrender.com',
+];
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'http://localhost:3000'],
+  origin: function (origin, callback) {
+    // Origin yo'q bo'lsa (curl, Postman) yoki ro'yxatda bo'lsa - ruxsat
+    if (!origin || allowedOrigins.includes(origin) || process.env.FRONTEND_URL === '*') {
+      callback(null, true);
+    } else {
+      callback(null, true); // Hozircha barchasiga ruxsat - deploy qilingach cheklash
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
