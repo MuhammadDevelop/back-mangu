@@ -1,0 +1,16 @@
+{
+  "siteName": "Mangu Liga",
+  "siteDescription": "O'zbekiston Sport Platformasi",
+  "logo": "",
+  "primaryColor": "#e53e3e",
+  "socialLinks": {
+    "telegram": "",
+    "instagram": "",
+    "youtube": ""
+  },
+  "paymentGateways": {
+    "payme": { "enabled": false, "merchantId": "" },
+    "click": { "enabled": false, "merchantId": "" }
+  },
+  "ottPlatforms": {}
+}
